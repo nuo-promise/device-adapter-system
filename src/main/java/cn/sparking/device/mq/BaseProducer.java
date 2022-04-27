@@ -24,7 +24,7 @@ public class BaseProducer {
 
     protected static final Logger LOG = LoggerFactory.getLogger(BaseProducer.class);
 
-    private static final RabbitTemplate RABBITTEMPLATE = AdapterManager.getBean("DeviceCloudMQTemplate", RabbitTemplate.class);
+    private static final RabbitTemplate RABBITTEMPLATE = AdapterManager.getBean("MQCloudTemplate", RabbitTemplate.class);
 
     /**
      * 指定 Head RPC 发送方法.

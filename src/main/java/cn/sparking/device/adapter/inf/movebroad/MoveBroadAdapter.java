@@ -30,7 +30,7 @@ import static cn.sparking.device.constant.MoveBroadConstants.MB_TYPE;
 public class MoveBroadAdapter extends BaseAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(MoveBroadAdapter.class);
 
-    private static final int REDIS_EXPIRED_INTERVAL = 14400;
+    private static final int REDIS_EXPIRED_INTERVAL = 400;
 
     @Resource
     private RabbitmqProperties rabbitmqProperties;
@@ -86,7 +86,7 @@ public class MoveBroadAdapter extends BaseAdapter {
                 .eventTime(DateTimeUtils.currentSecond())
                 .build();
         if (Objects.nonNull(lockStatusRequest.getTMoteStatus())) {
-            TMoteStatusModel tMoteStatusModel = JSON.parseObject(lockStatusRequest.getTMoteStatus().toJSONString(), TMoteStatusModel.class);
+            TMoteStatusModel tMoteStatusModel = lockStatusRequest.getTMoteStatus();
             boolean parkStatus = false;
             String armsStatus = "UP";
             boolean warn = false;
@@ -187,7 +187,7 @@ public class MoveBroadAdapter extends BaseAdapter {
                 .lockCode(lockInfoRequest.getSn())
                 .build();
         if (Objects.nonNull(lockInfoRequest.getTMoteInfo())) {
-            TMoteInfoModel tMoteInfoModel = JSON.parseObject(lockInfoRequest.getTMoteInfo().toJSONString(), TMoteInfoModel.class);
+            TMoteInfoModel tMoteInfoModel = lockInfoRequest.getTMoteInfo();
             if (Objects.nonNull(tMoteInfoModel)) {
                 publishLockInfoModel.setBatt(tMoteInfoModel.getBatt());
                 publishLockInfoModel.setTemp(tMoteInfoModel.getTemp());
@@ -209,7 +209,7 @@ public class MoveBroadAdapter extends BaseAdapter {
      * @param publishLockStatusModel {@link PublishLockStatusModel}
      */
     private void opsValue(final PublishLockStatusModel publishLockStatusModel) {
-        ReactiveRedisUtils.putValue(publishLockStatusModel.getLockCode(), publishLockStatusModel, REDIS_EXPIRED_INTERVAL).subscribe(
+        ReactiveRedisUtils.putValue(publishLockStatusModel.getLockCode(), JSON.toJSONString(publishLockStatusModel), REDIS_EXPIRED_INTERVAL).subscribe(
             flag -> {
                 if (flag) {
                     LOG.info("Key= " + publishLockStatusModel.getLockCode() + " save redis success!");

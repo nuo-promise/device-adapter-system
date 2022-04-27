@@ -1,6 +1,7 @@
 package cn.sparking.device.model.movebroad;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,18 +18,18 @@ public class TMoteInfoModel implements Serializable {
     private static final long serialVersionUID = -5982512576737612080L;
 
     // 电池电压
-    @JSONField(name = "Batt")
+    @JsonProperty("Batt")
     private int batt;
 
     // 设备温度
-    @JSONField(name = "Temp")
+    @JsonProperty("Temp")
     private int temp;
 
     // 物联网卡的卡号
-    @JSONField(name = "Sim")
+    @JsonProperty("Sim")
     private String sim;
 
     // 设备联网模组编号
-    @JSONField(name = "Imei")
+    @JsonProperty("Imei")
     private int imei;
 }

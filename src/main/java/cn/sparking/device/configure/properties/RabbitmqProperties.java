@@ -23,4 +23,8 @@ public class RabbitmqProperties {
     private String exchange;
 
     private Boolean enable;
+
+    private int consumerPrefetch;
+
+    private int concurrentConsumer;
 }

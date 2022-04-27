@@ -1,10 +1,17 @@
 package cn.sparking.device.mq;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
 /**
  * MQ Basic Data.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BaseMQData implements Serializable {
 
     private static final long serialVersionUID = 2367432151266974028L;
@@ -12,15 +19,6 @@ public class BaseMQData implements Serializable {
     private String from;
 
     private String type;
-
-    public BaseMQData() {
-
-    }
-
-    public BaseMQData(final String from, final String type) {
-        this.from = from;
-        this.type = type;
-    }
 
     @Override
     public String toString() {

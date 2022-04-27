@@ -7,6 +7,7 @@ import cn.sparking.device.model.movebroad.PublishLockStatusModel;
 import cn.sparking.device.mq.BaseMQData;
 import cn.sparking.device.mq.BaseProducer;
 import com.alibaba.fastjson.JSON;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ public class MoveBroadProducer extends BaseProducer {
 
     private static final String TOPICLASTEVENTFIX = ".event";
 
-    private RabbitmqProperties rabbitmqProperties;
+    private final RabbitmqProperties rabbitmqProperties;
 
     public MoveBroadProducer(final RabbitmqProperties rabbitmqProperties) {
         this.rabbitmqProperties = rabbitmqProperties;
@@ -34,7 +35,7 @@ public class MoveBroadProducer extends BaseProducer {
         send(rabbitmqProperties.getExchange(), TOPICPREFIX + "status" + TOPICLASTFIX,
                 MoveBroadConstants.MOVE_BROAD_MQ_METHOD_LOCK_STATUS, MoveBroadConstants.MB_LOCK_FLAG,
                 MoveBroadConstants.MB_VERSION, MoveBroadConstants.MB_CHARACTER,
-                JSON.toJSONString(new MoveBroadData(publishLockStatusModel, "save")), null, success -> {
+                JSON.toJSONString(new MoveBroadData(JSON.toJSONString(publishLockStatusModel), "save")), null, success -> {
                 if (success) {
                     LOG.info("Deliver MB Lock-Status message success, lockCode = " + publishLockStatusModel.getLockCode());
                 } else {
@@ -60,6 +61,7 @@ public class MoveBroadProducer extends BaseProducer {
             });
     }
 
+    @Data
     public static class MoveBroadData extends BaseMQData {
 
         private static final long serialVersionUID = 2545834301908607338L;

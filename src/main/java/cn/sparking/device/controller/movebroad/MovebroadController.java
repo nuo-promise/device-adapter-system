@@ -30,14 +30,4 @@ public class MovebroadController {
     public HttpStatus moveBroadLockStatus(@RequestBody final LockCallBackRequest lockCallBackRequest) {
         return moveBroadService.lockCallback(lockCallBackRequest);
     }
-
-    /**
-     * s.
-     * @return {}
-     */
-    @GetMapping("/test")
-    @ResponseBody
-    public HttpStatus test() {
-        return HttpStatus.OK;
-    }
 }
