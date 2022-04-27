@@ -1,6 +1,5 @@
 package cn.sparking.device.model.movebroad;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +19,5 @@ public class LockInfoRequest implements Serializable {
 
     private String name;
 
-    private JSONObject tMoteInfo;
+    private TMoteInfoModel tMoteInfo;
 }

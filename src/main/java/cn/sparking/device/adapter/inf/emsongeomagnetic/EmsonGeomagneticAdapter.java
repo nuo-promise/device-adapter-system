@@ -11,6 +11,7 @@ import cn.sparking.device.model.emsongeomagnetic.ParkStatusModel;
 import cn.sparking.device.model.emsongeomagnetic.RegisterModel;
 import cn.sparking.device.tools.DateTimeUtils;
 import cn.sparking.device.tools.ReactiveRedisUtils;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -105,7 +106,7 @@ public class EmsonGeomagneticAdapter extends BaseAdapter {
      * @param sparkData {@link SparkData}
      */
     private void opsValue(final SparkData sparkData) {
-        ReactiveRedisUtils.putValue(sparkData.getId(), sparkData, REDIS_EXPIRED_INTERVAL).subscribe(
+        ReactiveRedisUtils.putValue(sparkData.getId(), JSON.toJSONString(sparkData), REDIS_EXPIRED_INTERVAL).subscribe(
             flag -> {
                 if (flag) {
                     LOG.info("Key= " + sparkData.getId() + " save redis success!");

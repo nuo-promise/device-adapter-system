@@ -1,6 +1,7 @@
 package cn.sparking.device.model.movebroad;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,18 +17,18 @@ public class LockCallBackRequest implements Serializable {
 
     private static final long serialVersionUID = -4261324766688362021L;
 
-//    @JSONField(name = "SN")
+    @JsonProperty("SN")
     private String sn;
 
-//    @JSONField(name = "BerthCode")
+    @JsonProperty("BerthCode")
     private String berthCode;
 
-//    @JSONField(name = "Name")
+    @JsonProperty("Name")
     private String name;
 
-//    @JSONField(name = "TMoteStatus")
-    private JSONObject tMoteStatus;
+    @JsonProperty("TMoteStatus")
+    private TMoteStatusModel tMoteStatus;
 
-//    @JSONField(name = "TMoteInfo")
-    private JSONObject tMoteInfo;
+    @JsonProperty("TMoteInfo")
+    private TMoteInfoModel tMoteInfo;
 }

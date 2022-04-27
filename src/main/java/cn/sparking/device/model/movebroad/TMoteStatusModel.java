@@ -1,6 +1,7 @@
 package cn.sparking.device.model.movebroad;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,18 +17,18 @@ public class TMoteStatusModel implements Serializable {
 
     private static final long serialVersionUID = -7762129597074175809L;
 
-    @JSONField(name = "Status")
+    @JsonProperty("Status")
     private int status;
 
-    @JSONField(name = "Count")
+    @JsonProperty("Count")
     private int count;
 
-    @JSONField(name = "Time")
+    @JsonProperty("Time")
     private String time;
 
-    @JSONField(name = "Rssi")
+    @JsonProperty("Rssi")
     private int rssi;
 
-    @JSONField(name = "Snr")
+    @JsonProperty("Snr")
     private int snr;
 }

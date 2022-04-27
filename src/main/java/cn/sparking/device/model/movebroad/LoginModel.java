@@ -18,7 +18,11 @@ public class LoginModel implements Serializable {
 
     private static final long serialVersionUID = -2108124252392804715L;
 
+    private String url;
+
     private String appId;
 
     private String secret;
+
+    private String refreshToken;
 }
