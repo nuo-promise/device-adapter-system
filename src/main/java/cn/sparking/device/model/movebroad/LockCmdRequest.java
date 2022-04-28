@@ -11,19 +11,19 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LockCmdModel implements Serializable {
+public class LockCmdRequest implements Serializable {
 
-    private static final long serialVersionUID = -3311008802103345947L;
+    private static final long serialVersionUID = 3728841784673813764L;
 
-    private String url;
+    private String projectNo;
 
-    private String sn;
+    private String lockCode;
 
     private String method;
 
-    private LockControlModel lockControlModel;
+    private int action;
 
-    private SetLockModel setLockModel;
+    private int seconds;
 
     private String operator;
 

@@ -1,7 +1,7 @@
-package cn.sparking.device.adapter.inf.emsongeomagnetic.impl;
+package cn.sparking.device.adapter.service.emsongeomagnetic.impl;
 
 import cn.sparking.device.adapter.factory.AdapterManager;
-import cn.sparking.device.adapter.inf.emsongeomagnetic.EmsonGeomagneticService;
+import cn.sparking.device.adapter.service.emsongeomagnetic.EmsonGeomagneticService;
 import cn.sparking.device.constant.EmsonGeomagneticConstants;
 import cn.sparking.device.exception.SparkingException;
 import cn.sparking.device.model.emsongeomagnetic.EmsonGeomagneticRequest;

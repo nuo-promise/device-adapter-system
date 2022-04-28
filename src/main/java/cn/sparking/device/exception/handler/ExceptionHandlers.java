@@ -1,7 +1,7 @@
 package cn.sparking.device.exception.handler;
 
 import cn.sparking.device.constant.SparkingCommonResultMessage;
-import cn.sparking.device.model.response.ShuBoDeviceResult;
+import cn.sparking.device.model.response.DeviceAdapterResult;
 import cn.sparking.device.exception.SparkingCommonCode;
 import cn.sparking.device.exception.SparkingException;
 import jakarta.validation.ConstraintViolation;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class ExceptionHandlers {
 
     @ExceptionHandler(Exception.class)
-    protected ShuBoDeviceResult handleExceptionHandler(final Exception exception) {
+    protected DeviceAdapterResult handleExceptionHandler(final Exception exception) {
         log.error(exception.getMessage(), exception);
         String message;
         if (exception instanceof SparkingException) {
@@ -40,67 +40,67 @@ public class ExceptionHandlers {
         } else {
             message = "The System is busy, please try again later";
         }
-        return ShuBoDeviceResult.error(message);
+        return DeviceAdapterResult.error(message);
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    protected ShuBoDeviceResult handleDuplicateKeyException(final DuplicateKeyException exception) {
+    protected DeviceAdapterResult handleDuplicateKeyException(final DuplicateKeyException exception) {
         log.error("duplicate key exception ", exception);
-        return ShuBoDeviceResult.error(SparkingCommonResultMessage.UNIQUE_INDEX_CONFLICT_ERROR);
+        return DeviceAdapterResult.error(SparkingCommonResultMessage.UNIQUE_INDEX_CONFLICT_ERROR);
     }
 
     @ExceptionHandler(NullPointerException.class)
-    protected ShuBoDeviceResult handleNullPointException(final NullPointerException exception) {
+    protected DeviceAdapterResult handleNullPointException(final NullPointerException exception) {
         log.error("null pointer exception ", exception);
-        return ShuBoDeviceResult.error(SparkingCommonCode.NOT_FOUND_EXCEPTION, SparkingCommonResultMessage.NOT_FOUND_EXCEPTION);
+        return DeviceAdapterResult.error(SparkingCommonCode.NOT_FOUND_EXCEPTION, SparkingCommonResultMessage.NOT_FOUND_EXCEPTION);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ShuBoDeviceResult handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
+    protected DeviceAdapterResult handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
         log.warn("http request method not supported", e);
         StringBuilder sb = new StringBuilder();
         sb.append(e.getMethod());
         sb.append(
                 " method is not supported for this request. Supported methods are ");
         Objects.requireNonNull(e.getSupportedHttpMethods()).forEach(t -> sb.append(t).append(" "));
-        return ShuBoDeviceResult.error(sb.toString());
+        return DeviceAdapterResult.error(sb.toString());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ShuBoDeviceResult handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    protected DeviceAdapterResult handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.warn("method argument not valid", e);
         BindingResult bindingResult = e.getBindingResult();
         String errorMsg = bindingResult.getFieldErrors().stream()
                 .map(f -> f.getField().concat(": ").concat(Optional.ofNullable(f.getDefaultMessage()).orElse("")))
                 .collect(Collectors.joining("| "));
-        return ShuBoDeviceResult.error(String.format("Request error! invalid argument [%s]", errorMsg));
+        return DeviceAdapterResult.error(String.format("Request error! invalid argument [%s]", errorMsg));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    protected ShuBoDeviceResult handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
+    protected DeviceAdapterResult handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
         log.warn("missing servlet request parameter", e);
-        return ShuBoDeviceResult.error(String.format("%s parameter is missing", e.getParameterName()));
+        return DeviceAdapterResult.error(String.format("%s parameter is missing", e.getParameterName()));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ShuBoDeviceResult handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
+    protected DeviceAdapterResult handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
         log.warn("method argument type mismatch", e);
-        return ShuBoDeviceResult.error(String.format("%s should be of type %s", e.getName(), Objects.requireNonNull(e.getRequiredType()).getName()));
+        return DeviceAdapterResult.error(String.format("%s should be of type %s", e.getName(), Objects.requireNonNull(e.getRequiredType()).getName()));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    protected ShuBoDeviceResult handleConstraintViolationException(final ConstraintViolationException e) {
+    protected DeviceAdapterResult handleConstraintViolationException(final ConstraintViolationException e) {
         log.warn("constraint violation exception", e);
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        return ShuBoDeviceResult.error(violations.stream()
+        return DeviceAdapterResult.error(violations.stream()
                 .map(v -> v.getPropertyPath().toString().concat(": ").concat(v.getMessage()))
                 .collect(Collectors.joining("| ")));
     }
 
     @ExceptionHandler(SparkingException.class)
-    protected ShuBoDeviceResult handleShenyuException(final SparkingException exception) {
+    protected DeviceAdapterResult handleShenyuException(final SparkingException exception) {
         log.error("device adapter exception ", exception);
-        return ShuBoDeviceResult.error(SparkingCommonCode.ERROR, exception.getMessage());
+        return DeviceAdapterResult.error(SparkingCommonCode.ERROR, exception.getMessage());
 
     }
 }

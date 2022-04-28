@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.sparking.device.adapter.inf.emsongeomagnetic;
+package cn.sparking.device.adapter.service.emsongeomagnetic;
 
 import cn.sparking.device.model.emsongeomagnetic.EmsonGeomagneticRequest;
 import cn.sparking.device.model.response.emsongeomagnetic.EmsonGeomagneticResponse;
