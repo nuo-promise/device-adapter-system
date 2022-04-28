@@ -1,4 +1,4 @@
-package cn.sparking.device.adapter.inf.movebroad;
+package cn.sparking.device.adapter.service.movebroad;
 
 import cn.sparking.device.adapter.BaseAdapter;
 import cn.sparking.device.configure.properties.RabbitmqProperties;

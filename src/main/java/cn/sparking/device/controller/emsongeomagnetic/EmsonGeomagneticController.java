@@ -1,6 +1,6 @@
 package cn.sparking.device.controller.emsongeomagnetic;
 
-import cn.sparking.device.adapter.inf.emsongeomagnetic.EmsonGeomagneticService;
+import cn.sparking.device.adapter.service.emsongeomagnetic.EmsonGeomagneticService;
 import cn.sparking.device.model.emsongeomagnetic.EmsonGeomagneticRequest;
 import cn.sparking.device.model.response.emsongeomagnetic.EmsonGeomagneticResponse;
 import org.springframework.web.bind.annotation.PostMapping;

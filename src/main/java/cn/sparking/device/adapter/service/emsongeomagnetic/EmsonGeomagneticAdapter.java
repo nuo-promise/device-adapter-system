@@ -1,4 +1,4 @@
-package cn.sparking.device.adapter.inf.emsongeomagnetic;
+package cn.sparking.device.adapter.service.emsongeomagnetic;
 
 import cn.sparking.device.adapter.BaseAdapter;
 import cn.sparking.device.configure.properties.RabbitmqProperties;

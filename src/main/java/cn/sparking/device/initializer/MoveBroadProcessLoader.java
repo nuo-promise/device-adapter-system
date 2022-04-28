@@ -1,6 +1,6 @@
 package cn.sparking.device.initializer;
 
-import cn.sparking.device.adapter.inf.movebroad.MoveBroadService;
+import cn.sparking.device.adapter.service.movebroad.MoveBroadService;
 import cn.sparking.device.configure.properties.SparkingLockProperties;
 import cn.sparking.device.constant.MoveBroadConstants;
 import cn.sparking.device.model.movebroad.LoginModel;

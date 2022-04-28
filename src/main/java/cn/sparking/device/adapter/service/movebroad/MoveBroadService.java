@@ -1,8 +1,10 @@
-package cn.sparking.device.adapter.inf.movebroad;
+package cn.sparking.device.adapter.service.movebroad;
 
+import cn.sparking.device.model.movebroad.CmdCallBackModel;
 import cn.sparking.device.model.movebroad.LockCallBackRequest;
 import cn.sparking.device.model.movebroad.LockCmdModel;
 import cn.sparking.device.model.movebroad.LoginModel;
+import cn.sparking.device.model.response.DeviceAdapterResult;
 import org.springframework.http.HttpStatus;
 
 public interface MoveBroadService {
@@ -33,5 +35,12 @@ public interface MoveBroadService {
      * @param lockCmdModel {@link LockCmdModel}
      * @return {@link Integer}
      */
-    Integer controlCmd(LockCmdModel lockCmdModel);
+    DeviceAdapterResult controlCmd(LockCmdModel lockCmdModel);
+
+    /**
+     * 控制命令回调.
+     * @param cmdCallBackModel {@link CmdCallBackModel}
+     * @return {@link HttpStatus}
+     */
+    HttpStatus cmdCallback(CmdCallBackModel cmdCallBackModel);
 }

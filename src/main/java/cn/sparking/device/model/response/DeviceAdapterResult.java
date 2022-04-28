@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * SpkDeviceResult.
  */
-public class ShuBoDeviceResult implements Serializable {
+public class DeviceAdapterResult implements Serializable {
 
     private static final long serialVersionUID = -2792556188993845048L;
 
@@ -22,7 +22,7 @@ public class ShuBoDeviceResult implements Serializable {
     /**
      * Instantiates a new spk result.
      */
-    public ShuBoDeviceResult() {
+    public DeviceAdapterResult() {
 
     }
 
@@ -32,7 +32,7 @@ public class ShuBoDeviceResult implements Serializable {
      * @param message the message
      * @param data the data
      */
-    public ShuBoDeviceResult(final Integer code, final String message, final Object data) {
+    public DeviceAdapterResult(final Integer code, final String message, final Object data) {
         this.code = code;
         this.message = message;
         this.data = data;
@@ -41,27 +41,27 @@ public class ShuBoDeviceResult implements Serializable {
     /**
      * return success.
      *
-     * @return {@linkplain ShuBoDeviceResult}
+     * @return {@linkplain DeviceAdapterResult}
      */
-    public static ShuBoDeviceResult success() {
+    public static DeviceAdapterResult success() {
         return success("");
     }
 
     /**
      * return success of msg.
      * @param msg the msg
-     * @return {@link ShuBoDeviceResult}
+     * @return {@link DeviceAdapterResult}
      */
-    public static ShuBoDeviceResult success(final String msg) {
+    public static DeviceAdapterResult success(final String msg) {
         return success(msg, null);
     }
 
     /**
      * return success.
      * @param data the data
-     * @return {@link ShuBoDeviceResult}
+     * @return {@link DeviceAdapterResult}
      */
-    public static ShuBoDeviceResult success(final Object data) {
+    public static DeviceAdapterResult success(final Object data) {
         return success(null, data);
     }
 
@@ -69,18 +69,18 @@ public class ShuBoDeviceResult implements Serializable {
      * return success.
      * @param msg the msg
      * @param data the data
-     * @return {@link ShuBoDeviceResult}
+     * @return {@link DeviceAdapterResult}
      */
-    public static ShuBoDeviceResult success(final String msg, final Object data) {
+    public static DeviceAdapterResult success(final String msg, final Object data) {
         return get(CommonErrorCode.SUCCESS, msg, data);
     }
 
     /**
      * return error.
      * @param msg the msg
-     * @return {@link ShuBoDeviceResult}
+     * @return {@link DeviceAdapterResult}
      */
-    public static ShuBoDeviceResult error(final String msg) {
+    public static DeviceAdapterResult error(final String msg) {
         return error(CommonErrorCode.ERROR, msg);
     }
 
@@ -88,18 +88,18 @@ public class ShuBoDeviceResult implements Serializable {
      * return error.
      * @param code the code
      * @param msg the msg
-     * @return {@link ShuBoDeviceResult}
+     * @return {@link DeviceAdapterResult}
      */
-    public static ShuBoDeviceResult error(final int code, final String msg) {
+    public static DeviceAdapterResult error(final int code, final String msg) {
         return get(code, msg, null);
     }
 
     /**
      * return timeout.
      * @param msg the msg
-     * @return {@link ShuBoDeviceResult}
+     * @return {@link DeviceAdapterResult}
      */
-    public static ShuBoDeviceResult timeout(final String msg) {
+    public static DeviceAdapterResult timeout(final String msg) {
         return error(HttpStatus.REQUEST_TIMEOUT.value(), msg);
     }
 
@@ -108,10 +108,10 @@ public class ShuBoDeviceResult implements Serializable {
      * @param code the code
      * @param msg the msg
      * @param data the data
-     * @return {@link ShuBoDeviceResult}
+     * @return {@link DeviceAdapterResult}
      */
-    public static ShuBoDeviceResult get(final int code, final String msg, final Object data) {
-        return new ShuBoDeviceResult(code, msg, data);
+    public static DeviceAdapterResult get(final int code, final String msg, final Object data) {
+        return new DeviceAdapterResult(code, msg, data);
     }
 
     /**
@@ -179,11 +179,11 @@ public class ShuBoDeviceResult implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof ShuBoDeviceResult)) {
+        if (!(obj instanceof DeviceAdapterResult)) {
             return false;
         }
 
-        ShuBoDeviceResult that = (ShuBoDeviceResult) obj;
+        DeviceAdapterResult that = (DeviceAdapterResult) obj;
         return Objects.equals(code, that.code) && Objects.equals(message, that.message) && Objects.equals(data, that.data);
     }
 
