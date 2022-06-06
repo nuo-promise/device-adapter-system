@@ -1,5 +1,6 @@
 package cn.sparking.device.adapter.service.emsongeomagnetic.impl;
 
+import cn.hutool.http.HttpResponse;
 import cn.sparking.device.adapter.factory.AdapterManager;
 import cn.sparking.device.adapter.service.emsongeomagnetic.EmsonGeomagneticService;
 import cn.sparking.device.constant.EmsonGeomagneticConstants;
@@ -9,11 +10,18 @@ import cn.sparking.device.model.emsongeomagnetic.HeartModel;
 import cn.sparking.device.model.emsongeomagnetic.ParkStatusModel;
 import cn.sparking.device.model.emsongeomagnetic.RegisterModel;
 import cn.sparking.device.model.response.emsongeomagnetic.EmsonGeomagneticResponse;
+import cn.sparking.device.tools.HttpUtils;
+import cn.sparking.device.tools.ProjectUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -23,6 +31,8 @@ import java.util.Optional;
 public class EmsonGeomagneticServiceImpl implements EmsonGeomagneticService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmsonGeomagneticServiceImpl.class);
+
+
 
     private final AdapterManager adapterManager;
 
@@ -57,11 +67,11 @@ public class EmsonGeomagneticServiceImpl implements EmsonGeomagneticService {
         if (Optional.ofNullable(emasonRequest).isPresent()) {
             switch (emasonRequest.getCmd()) {
                 case EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_REGISTER:
-                    return validRegisterData(emasonRequest.getCmd(), (RegisterModel) emasonRequest.getBody());
+                    return validRegisterData(emasonRequest.getCmd(), JSON.parseObject(JSON.toJSONString(emasonRequest.getBody()), RegisterModel.class));
                 case EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_HEART:
-                    return validHeartBeatData(emasonRequest.getCmd(), (HeartModel) emasonRequest.getBody());
+                    return validHeartBeatData(emasonRequest.getCmd(), JSON.parseObject(JSON.toJSONString(emasonRequest.getBody()), HeartModel.class));
                 case EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_STATUS:
-                    return validParkStatusData(emasonRequest.getCmd(), (ParkStatusModel) emasonRequest.getBody());
+                    return validParkStatusData(emasonRequest.getCmd(), JSON.parseObject(JSON.toJSONString(emasonRequest.getBody()), ParkStatusModel.class));
                 default:
                     LOG.warn("EMSON CMD: " + emasonRequest.getCmd() + " Have Not Match");
                     break;
@@ -69,6 +79,7 @@ public class EmsonGeomagneticServiceImpl implements EmsonGeomagneticService {
         }
         return false;
     }
+
 
     /**
      * valid RegisterModel data.

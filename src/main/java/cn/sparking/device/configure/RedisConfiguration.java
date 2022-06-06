@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 import java.time.Duration;
 
 @Configuration
-public class RedisConfiture {
+public class RedisConfiguration {
 
     @Resource
     private RedisProperties redisProperties;

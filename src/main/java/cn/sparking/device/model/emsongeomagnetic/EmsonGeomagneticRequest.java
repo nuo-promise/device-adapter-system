@@ -17,11 +17,20 @@
 
 package cn.sparking.device.model.emsongeomagnetic;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
 /**
  * EmsonGeomagneticResult.
  */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmsonGeomagneticRequest<T> implements Serializable {
 
     private static final long serialVersionUID = -7929905678236987979L;
@@ -36,40 +45,4 @@ public class EmsonGeomagneticRequest<T> implements Serializable {
      */
     private T body;
 
-    EmsonGeomagneticRequest(final String cmd, final T body) {
-        this.cmd = cmd;
-        this.body = body;
-    }
-
-    /**
-     * Get code.
-     * @return the code
-     */
-    public String getCmd() {
-        return cmd;
-    }
-
-    /**
-     * Set cmd.
-     * @param cmd the cmd
-     */
-    public void setCode(final String cmd) {
-        this.cmd = cmd;
-    }
-
-    /**
-     * Get code.
-     * @return the code
-     */
-    public T getBody() {
-        return body;
-    }
-
-    /**
-     * Set code.
-     * @param body {@link T}
-     */
-    public void setBody(final T body) {
-        this.body = body;
-    }
 }

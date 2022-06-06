@@ -35,7 +35,7 @@ public class EmsonGeomagneticProducer extends BaseProducer {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmsonGeomagneticProducer.class);
 
-    private static final String TOPICPREFIX = "emson.device.";
+    private static final String TOPICPREFIX = ".device.";
 
     private static final String TOPICLASTFIX = ".data";
 
@@ -51,8 +51,8 @@ public class EmsonGeomagneticProducer extends BaseProducer {
      * producer device register.
      * @param registerModel {@link RegisterModel}
      */
-    public void publishRegister(final RegisterModel registerModel) {
-        send(rabbitmqProperties.getExchange(), TOPICPREFIX + "register" + TOPICLASTFIX,
+    public void publishRegister(final String projectNo, final RegisterModel registerModel) {
+        send(rabbitmqProperties.getExchange(), projectNo + TOPICPREFIX + "register" + TOPICLASTFIX,
                 EmsonGeomagneticConstants.EMSON_MQ_METHOD_REGISTER, EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_FLAG,
                 EmsonGeomagneticConstants.EMSON_VERSION, EmsonGeomagneticConstants.EMSON_CHARACTER,
                 JSON.toJSONString(new EmsonGeomagneticData(registerModel, "save")), null, success -> {
@@ -68,8 +68,8 @@ public class EmsonGeomagneticProducer extends BaseProducer {
      * producer device heart.
      * @param heartModel {@link HeartModel}
      */
-    public void publishHeartbeat(final HeartModel heartModel) {
-        send(rabbitmqProperties.getExchange(), TOPICPREFIX + "heartbeat" + TOPICLASTFIX,
+    public void publishHeartbeat(final String projectNo, final HeartModel heartModel) {
+        send(rabbitmqProperties.getExchange(), projectNo + TOPICPREFIX + "heartbeat" + TOPICLASTFIX,
                 EmsonGeomagneticConstants.EMSON_MQ_METHOD_HEARTBEAT, EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_FLAG,
                 EmsonGeomagneticConstants.EMSON_VERSION, EmsonGeomagneticConstants.EMSON_CHARACTER,
                 JSON.toJSONString(new EmsonGeomagneticData(heartModel, "save")), null, success -> {
@@ -85,8 +85,8 @@ public class EmsonGeomagneticProducer extends BaseProducer {
      * producer park status.
      * @param parkStatusModel {@link ParkStatusModel}
      */
-    public void publishParkStatus(final ParkStatusModel parkStatusModel) {
-        send(rabbitmqProperties.getExchange(), TOPICPREFIX + "parkstatus" + TOPICLASTFIX,
+    public void publishParkStatus(final String projectNo, final ParkStatusModel parkStatusModel) {
+        send(rabbitmqProperties.getExchange(), projectNo + TOPICPREFIX + "parkstatus" + TOPICLASTFIX,
                 EmsonGeomagneticConstants.EMSON_MQ_METHOD_PARK_STATUS, EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_FLAG,
                 EmsonGeomagneticConstants.EMSON_VERSION, EmsonGeomagneticConstants.EMSON_CHARACTER,
                 JSON.toJSONString(new EmsonGeomagneticData(parkStatusModel, "save")), null, success -> {
@@ -102,8 +102,8 @@ public class EmsonGeomagneticProducer extends BaseProducer {
      * producer error status.
      * @param heartModel {@link HeartModel}
      */
-    public void publishErrorDevice(final HeartModel heartModel) {
-        send(rabbitmqProperties.getExchange(), TOPICPREFIX + "error" + TOPICLASTEVENTFIX,
+    public void publishErrorDevice(final String projectNo, final HeartModel heartModel) {
+        send(rabbitmqProperties.getExchange(), projectNo + TOPICPREFIX + "error" + TOPICLASTEVENTFIX,
                 EmsonGeomagneticConstants.EMSON_MQ_METHOD_DEVICE_EVENT, EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_FLAG,
                 EmsonGeomagneticConstants.EMSON_VERSION, EmsonGeomagneticConstants.EMSON_CHARACTER,
                 JSON.toJSONString(new EmsonGeomagneticData(heartModel, "save")), null, success -> {
