@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -53,8 +54,8 @@ public class EmsonGeomagneticServiceImpl implements EmsonGeomagneticService {
                 return new EmsonGeomagneticResponse(EmsonGeomagneticConstants.EMSON_ERROR_101, new EmsonGeomagneticResponse.Body(EmsonGeomagneticConstants.EMSON_ERROR_101_MSG));
             }
             adapterManager.getAdaptedService(EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_ADAPTER).adapted(emasonRequest);
-        } catch (SparkingException e) {
-            LOG.error(EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_FLAG + " processApi Error: " + e);
+        } catch (SparkingException ex) {
+            Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
         return null;
     }

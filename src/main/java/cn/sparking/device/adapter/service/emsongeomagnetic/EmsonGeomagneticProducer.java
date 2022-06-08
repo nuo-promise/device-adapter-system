@@ -41,7 +41,7 @@ public class EmsonGeomagneticProducer extends BaseProducer {
 
     private static final String TOPICLASTEVENTFIX = ".event";
 
-    private RabbitmqProperties rabbitmqProperties;
+    private final RabbitmqProperties rabbitmqProperties;
 
     public EmsonGeomagneticProducer(final RabbitmqProperties rabbitmqProperties) {
         this.rabbitmqProperties = rabbitmqProperties;
@@ -127,6 +127,10 @@ public class EmsonGeomagneticProducer extends BaseProducer {
         EmsonGeomagneticData(final Object data, final String type) {
             super("Emson", type);
             this.data = data;
+        }
+
+        public Object getData() {
+            return this.data;
         }
 
         /**

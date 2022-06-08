@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties(prefix = "sparking.lock.move-broad")
-public class SparkingLockProperties {
+public class SparkingLockMBProperties {
     private Boolean active;
 
     private String url;

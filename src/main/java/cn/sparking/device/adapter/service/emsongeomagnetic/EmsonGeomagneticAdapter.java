@@ -51,7 +51,7 @@ public class EmsonGeomagneticAdapter extends BaseAdapter {
         String projectNo = "";
         try {
             EmsonGeomagneticRequest<Object> emasonRequest = (EmsonGeomagneticRequest<Object>) parameters;
-            if (Optional.ofNullable(emasonRequest).isPresent()) {
+            if (Objects.nonNull(emasonRequest)) {
                 switch (emasonRequest.getCmd()) {
                     case EmsonGeomagneticConstants.EMSON_GEOMAGNETIC_REGISTER:
                         RegisterModel registerModel = JSON.parseObject(JSON.toJSONString(emasonRequest.getBody()), RegisterModel.class);

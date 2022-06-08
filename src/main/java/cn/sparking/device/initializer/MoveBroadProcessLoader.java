@@ -1,7 +1,7 @@
 package cn.sparking.device.initializer;
 
 import cn.sparking.device.adapter.service.movebroad.MoveBroadService;
-import cn.sparking.device.configure.properties.SparkingLockProperties;
+import cn.sparking.device.configure.properties.SparkingLockMBProperties;
 import cn.sparking.device.constant.MoveBroadConstants;
 import cn.sparking.device.model.movebroad.LoginModel;
 import cn.sparking.device.tools.MoveBroadUtils;
@@ -23,7 +23,7 @@ public class MoveBroadProcessLoader implements ApplicationRunner {
     private static final Logger LOG = LoggerFactory.getLogger(MoveBroadProcessLoader.class);
 
     @Resource
-    private SparkingLockProperties sparkingLockProperties;
+    private SparkingLockMBProperties sparkingLockMBProperties;
 
     @Autowired
     private MoveBroadService moveBroadService;
@@ -31,9 +31,9 @@ public class MoveBroadProcessLoader implements ApplicationRunner {
     protected void init() {
         try {
             Integer result = moveBroadService.accessToken(LoginModel.builder()
-                    .appId(sparkingLockProperties.getAppId())
-                    .secret(sparkingLockProperties.getSecret())
-                    .url(sparkingLockProperties.getUrl() + MoveBroadConstants.MB_LOGIN).build());
+                    .appId(sparkingLockMBProperties.getAppId())
+                    .secret(sparkingLockMBProperties.getSecret())
+                    .url(sparkingLockMBProperties.getUrl() + MoveBroadConstants.MB_LOGIN).build());
             if (MB_SUCCESS.equals(result)) {
                 LOG.info("登录 MoveBroad Success. 访问参数:" + MoveBroadUtils.getValue());
             } else {
@@ -46,7 +46,7 @@ public class MoveBroadProcessLoader implements ApplicationRunner {
 
     @Override
     public void run(final ApplicationArguments args) throws Exception {
-        if (sparkingLockProperties.getActive()) {
+        if (sparkingLockMBProperties.getActive()) {
             this.init();
         }
     }

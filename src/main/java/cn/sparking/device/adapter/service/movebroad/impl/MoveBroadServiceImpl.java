@@ -3,8 +3,9 @@ package cn.sparking.device.adapter.service.movebroad.impl;
 import cn.hutool.http.HttpResponse;
 import cn.sparking.device.adapter.factory.AdapterManager;
 import cn.sparking.device.adapter.service.movebroad.MoveBroadService;
-import cn.sparking.device.configure.properties.SparkingLockProperties;
+import cn.sparking.device.configure.properties.SparkingLockMBProperties;
 import cn.sparking.device.constant.MoveBroadConstants;
+import cn.sparking.device.exception.SparkingException;
 import cn.sparking.device.model.movebroad.CmdCallBackModel;
 import cn.sparking.device.model.movebroad.LockCallBackRequest;
 import cn.sparking.device.model.movebroad.LockCmdModel;
@@ -46,10 +47,10 @@ public class MoveBroadServiceImpl implements MoveBroadService {
     private static final int REQUEST_TRY_AGAIN_COUNT = 5;
 
     /** 请求失败之后尝试次数 */
-    private static Map<String, Integer> REQUEST_TRY_AGAIN_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, Integer> REQUEST_TRY_AGAIN_MAP = new ConcurrentHashMap<>();
 
     @Resource
-    private SparkingLockProperties sparkingLockProperties;
+    private SparkingLockMBProperties sparkingLockMBProperties;
 
     private final AdapterManager adapterManager;
 
@@ -61,7 +62,7 @@ public class MoveBroadServiceImpl implements MoveBroadService {
     public HttpStatus lockCallback(final LockCallBackRequest lockCallBackRequest) {
         try {
             adapterManager.getAdaptedService(MoveBroadConstants.MOVE_BROAD_ADAPTER).adapted(lockCallBackRequest);
-        } catch (Exception ex) {
+        } catch (SparkingException ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
         return HttpStatus.OK;
@@ -135,7 +136,7 @@ public class MoveBroadServiceImpl implements MoveBroadService {
         if (REQUEST_TRY_AGAIN_MAP.containsKey(lockCmdModel.getSn())) {
             return DeviceAdapterResult.error(MB_ERROR_100002, "have same lock number request.");
         }
-        lockCmdModel.setUrl(sparkingLockProperties.getUrl() + MB_CONTROL_CMD);
+        lockCmdModel.setUrl(sparkingLockMBProperties.getUrl() + MB_CONTROL_CMD);
         return invokeControl(lockCmdModel);
     }
 
@@ -167,7 +168,7 @@ public class MoveBroadServiceImpl implements MoveBroadService {
             requestObj.put("param", param);
             LOG.info("invokeControl send : => " + requestObj.toJSONString());
             HttpResponse httpResponse = HttpUtils.post(lockCmdModel.getUrl(), requestObj.toJSONString(),
-                    sparkingLockProperties.getAppId(), MoveBroadUtils.getValue().getAccessToken());
+                    sparkingLockMBProperties.getAppId(), MoveBroadUtils.getValue().getAccessToken());
             if (Objects.nonNull(httpResponse)) {
                 cmdResponse = JSON.parseObject(httpResponse.body(), CmdResponse.class);
                 if (httpResponse.isOk()) {
@@ -185,12 +186,12 @@ public class MoveBroadServiceImpl implements MoveBroadService {
         if (Objects.nonNull(cmdResponse)) {
             if (MB_ERROR_1010001.equals(cmdResponse.getResultCode())) {
                 LoginModel loginModel = LoginModel.builder()
-                        .appId(sparkingLockProperties.getAppId())
-                        .secret(sparkingLockProperties.getSecret())
+                        .appId(sparkingLockMBProperties.getAppId())
+                        .secret(sparkingLockMBProperties.getSecret())
                         .build();
                 if (Objects.nonNull(MoveBroadUtils.getValue()) && StringUtils.isNotBlank(MoveBroadUtils.getValue().getRefreshToken())) {
                     loginModel.setRefreshToken(MoveBroadUtils.getValue().getRefreshToken());
-                    loginModel.setUrl(sparkingLockProperties.getUrl() + MB_REFRESH_TOKEN);
+                    loginModel.setUrl(sparkingLockMBProperties.getUrl() + MB_REFRESH_TOKEN);
                     for (int i = 0; i < REQUEST_TRY_AGAIN_COUNT; i++) {
                         LOG.warn("MoveBroad Token Error, RefreshToken: -> " + i);
                         if (MB_SUCCESS.equals(refreshToken(loginModel))) {

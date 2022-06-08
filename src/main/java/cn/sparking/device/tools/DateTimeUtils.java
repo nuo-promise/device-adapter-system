@@ -9,11 +9,17 @@ public class DateTimeUtils {
 
     private static final SimpleDateFormat SIMPLEFORMAT;
 
+    private static final SimpleDateFormat SIMPLEDATEFORMAT;
+
     static {
         TIMESTAMPFORMAT = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         SIMPLEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SIMPLEDATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
     }
 
+    public static String currentDate() {
+        return SIMPLEDATEFORMAT.format(currentTime());
+    }
     /**
      * get current time string.
      * @return String
