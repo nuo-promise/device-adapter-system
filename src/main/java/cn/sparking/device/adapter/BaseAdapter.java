@@ -34,13 +34,15 @@ public abstract class BaseAdapter {
 
     /**
      * agreement adapted.
+     *
      * @param parameters {@link Object}
+     * @return
      */
-    public abstract void adapted(Object parameters);
+    public abstract Object adapted(Object parameters);
 
     /**
      * agreement anti-adapted.
      * @param parameters {@link Object}
      */
-    public abstract void antiAdapted(Object parameters);
+    public abstract Object antiAdapted(Object parameters);
 }

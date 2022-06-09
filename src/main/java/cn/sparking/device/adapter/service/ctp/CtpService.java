@@ -5,34 +5,33 @@ import cn.sparking.device.model.ctp.ParkStatusModel;
 import cn.sparking.device.model.ctp.SearchBoardModel;
 import cn.sparking.device.model.ctp.WorkModeModel;
 import cn.sparking.device.model.response.DeviceAdapterResult;
-import cn.sparking.device.model.response.ctp.BaseResponse;
-import cn.sparking.device.model.response.ctp.SearchBoardResponse;
-import cn.sparking.device.model.response.ctp.WorkModeResponse;
+import com.alibaba.fastjson.JSONObject;
 
 public interface CtpService {
 
      /**
       * 上报状态数据
+      *
       * @param parkStatusModel {@link ParkStatusModel}
-      * @return {@BaseResponse}
+      * @return {@link JSONObject}
       */
-     BaseResponse parkStatus(String sign, ParkStatusModel parkStatusModel);
+     JSONObject parkStatus(String sign, ParkStatusModel parkStatusModel);
 
 
      /**
       * 查询工作模式
       * @param workMode {@link WorkModeModel}
-      * @return {@link WorkModeResponse}
+      * @return {@link JSONObject}
       */
-     WorkModeResponse workMode(String sign, WorkModeModel workMode);
+     JSONObject workMode(String sign, WorkModeModel workMode);
 
 
      /**
       * 查询是否可以降板
       * @param searchBoard {@link SearchBoardModel}
-      * @return {@link SearchBoardResponse}
+      * @return {@link JSONObject}
       */
-     SearchBoardResponse searchBoard(String sign, SearchBoardModel searchBoard);
+     JSONObject searchBoard(String sign, SearchBoardModel searchBoard);
 
      /**
       * 地锁控制接口.

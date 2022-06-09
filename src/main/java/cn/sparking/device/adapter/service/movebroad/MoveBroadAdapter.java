@@ -40,7 +40,7 @@ public class MoveBroadAdapter extends BaseAdapter {
     }
 
     @Override
-    public void adapted(final Object parameters) {
+    public Object adapted(final Object parameters) {
         try {
             LOG.info("Receive MB Lock Status Info: " + JSON.toJSONString(parameters));
             LockCallBackRequest lockCallBackRequest = (LockCallBackRequest) parameters;
@@ -71,11 +71,12 @@ public class MoveBroadAdapter extends BaseAdapter {
         } catch (Exception ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
+        return null;
     }
 
     @Override
-    public void antiAdapted(final Object parameters) {
-
+    public Object antiAdapted(final Object parameters) {
+        return null;
     }
 
     private void lockStatus(final LockStatusRequest lockStatusRequest) {

@@ -1,6 +1,5 @@
 package cn.sparking.device.model.ctp;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,16 +21,10 @@ public class ControlModel implements Serializable {
 
     private static final long serialVersionUID = 4197342713349993187L;
 
-    // 厂商ID
-    @JSONField(name = "FacotryId")
-    private String facotryId;
-
     // 设备编码
-    @JSONField(name = "DeviceNo")
     private String deviceNo;
 
     // 命令类型 up - 升板 down - 降板 syn - 锁相关操作
-    @JSONField(name = "CmdType")
     private String cmdType;
 
     // 6 远程复位 7 强制结束订单 8 有车立即升板 9 二次升板

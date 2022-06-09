@@ -3,6 +3,8 @@ package cn.sparking.device.mq;
 import cn.sparking.device.exception.SparkingException;
 import cn.sparking.device.adapter.factory.AdapterManager;
 import cn.sparking.device.tools.DateTimeUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -27,7 +29,7 @@ public class BaseProducer {
     private static final RabbitTemplate RABBITTEMPLATE = AdapterManager.getBean("MQCloudTemplate", RabbitTemplate.class);
 
     /**
-     * 指定 Head RPC 发送方法.
+     * 指定 Head 发送方法.
      * @param exchange exchange
      * @param topic topic
      * @param method method
@@ -76,4 +78,55 @@ public class BaseProducer {
             Arrays.stream(e.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
     }
+
+    /**
+     * 指定 Head RPC 发送方法.
+     * @param exchange exchange
+     * @param topic topic
+     * @param method method
+     * @param from data from to
+     * @param version data version
+     * @param character data character default UTF-8
+     * @param msg business data
+     * @param headData head data
+     */
+    public int send(final String exchange, final String topic, final String method, final String from,
+                     final String version, final String character, final String msg,
+                     final Map<String, String> headData) {
+        try {
+            String currentTime = DateTimeUtils.timestamp();
+            LOG.info("#" + method + "==> " + msg + " to mq rpc at " + currentTime + ", topic = " + topic);
+            MessageProperties messageProperties = new MessageProperties();
+            messageProperties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+            messageProperties.setHeader("method", method);
+            messageProperties.setHeader("timestamp", currentTime);
+            messageProperties.setHeader("from", from);
+            messageProperties.setHeader("character", character);
+            messageProperties.setHeader("version", version);
+            messageProperties.setHeader("adapter", "Sparking");
+            messageProperties.setHeader("topic", topic);
+            if (Optional.ofNullable(headData).isPresent()) {
+                headData.forEach((key, value) -> {
+                    LOG.info("#" + method + " <HEAD> ==> " + key + " : " + value);
+                    messageProperties.setHeader(key, value);
+                });
+            }
+            Message message = new Message(msg.getBytes(StandardCharsets.UTF_8), messageProperties);
+
+            Object receiveMessage = RABBITTEMPLATE.convertSendAndReceive(exchange, topic, message);
+            if (Objects.nonNull(receiveMessage)) {
+                JSONObject retJson = JSON.parseObject(new String((byte[]) receiveMessage));
+                LOG.info("接收 C 端 RPC 消费返回: " + retJson.toJSONString());
+                if (!retJson.containsKey("code") || !retJson.getString("code").equals("00000")) {
+                   LOG.warn("C 端消费 RPC 设备状态信息失败, 下面执行 HTTP 请求 " + msg);
+
+                }
+            }
+        } catch (SparkingException e) {
+            Arrays.stream(e.getStackTrace()).forEach(item -> LOG.error(item.toString()));
+        }
+    }
+
+
+
 }

@@ -2,11 +2,8 @@ package cn.sparking.device.adapter.service.ctp.impl;
 
 import cn.sparking.device.adapter.factory.AdapterManager;
 import cn.sparking.device.adapter.service.ctp.CtpService;
-import cn.sparking.device.adapter.service.emsongeomagnetic.impl.EmsonGeomagneticServiceImpl;
 import cn.sparking.device.configure.properties.SparkingLockCTPProperties;
-import cn.sparking.device.configure.properties.SparkingLockMBProperties;
 import cn.sparking.device.constant.CtpConstants;
-import cn.sparking.device.constant.EmsonGeomagneticConstants;
 import cn.sparking.device.exception.CtpErrorCode;
 import cn.sparking.device.exception.SparkingException;
 import cn.sparking.device.model.ctp.ControlModel;
@@ -15,10 +12,8 @@ import cn.sparking.device.model.ctp.ParkStatusModel;
 import cn.sparking.device.model.ctp.SearchBoardModel;
 import cn.sparking.device.model.ctp.WorkModeModel;
 import cn.sparking.device.model.response.DeviceAdapterResult;
-import cn.sparking.device.model.response.ctp.BaseResponse;
-import cn.sparking.device.model.response.ctp.SearchBoardResponse;
-import cn.sparking.device.model.response.ctp.WorkModeResponse;
 import cn.sparking.device.tools.DateTimeUtils;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,16 +36,15 @@ public class CtpServiceImpl implements CtpService {
     }
 
     @Override
-    public BaseResponse parkStatus(String sign, ParkStatusModel parkStatusModel) {
+    public JSONObject parkStatus(String sign, ParkStatusModel parkStatusModel) {
+        JSONObject result = new JSONObject();
         try {
-            if (!invoke(sign, parkStatusModel.getDeviceNo())) {
-               return new BaseResponse(CtpErrorCode.AUTH_ERROR, "请求验证失败");
+            if (!invoke(sign, parkStatusModel.getLockCode())) {
+                result.put("ErrorCode", CtpErrorCode.AUTH_ERROR);
+                result.put("ErrorMsg", "请求验证失败");
+                return result;
             }
-            CtpRequest<ParkStatusModel> request = CtpRequest.<ParkStatusModel>builder()
-                    .cmd(CtpConstants.CTP_REQUEST_PARK_STATUS)
-                    .body(parkStatusModel)
-                    .build();
-            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(request);
+            return (JSONObject) adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(parkStatusModel);
         } catch (SparkingException ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
@@ -58,12 +52,12 @@ public class CtpServiceImpl implements CtpService {
     }
 
     @Override
-    public WorkModeResponse workMode(String sign, WorkModeModel workMode) {
+    public JSONObject workMode(String sign, WorkModeModel workMode) {
+        JSONObject result =  new JSONObject();
         try {
             if (!invoke(sign, workMode.getDeviceNo())) {
-                WorkModeResponse result =  WorkModeResponse.builder().build();
-                result.setErrorCode(CtpErrorCode.AUTH_ERROR);
-                result.setErrorMsg("请求验证失败");
+                result.put("ErrorCode", CtpErrorCode.AUTH_ERROR);
+                result.put("ErrorMsg", "请求验证失败");
                 return result;
             }
             CtpRequest<WorkModeModel> request = CtpRequest.<WorkModeModel>builder()
@@ -79,13 +73,13 @@ public class CtpServiceImpl implements CtpService {
     }
 
     @Override
-    public SearchBoardResponse searchBoard(String sign, SearchBoardModel searchBoard) {
+    public JSONObject searchBoard(String sign, SearchBoardModel searchBoard) {
+        JSONObject result =  new JSONObject();
         try {
 
             if (!invoke(sign, searchBoard.getDeviceNo())) {
-                SearchBoardResponse result =  SearchBoardResponse.builder().build();
-                result.setErrorCode(CtpErrorCode.AUTH_ERROR);
-                result.setErrorMsg("请求验证失败");
+                result.put("ErrorCode", CtpErrorCode.AUTH_ERROR);
+                result.put("ErrorMsg", "请求验证失败");
                 return result;
             }
             CtpRequest<SearchBoardModel> request = CtpRequest.<SearchBoardModel>builder()
@@ -103,6 +97,7 @@ public class CtpServiceImpl implements CtpService {
     @Override
     public DeviceAdapterResult controlCmd(ControlModel controlModel) {
         try {
+
             // 获取到上游发送控制指令,进行拼接发送目标服务器
         } catch (SparkingException ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
@@ -117,7 +112,7 @@ public class CtpServiceImpl implements CtpService {
      * @return Boolean
      */
     private Boolean invoke(final String sign, final String deviceNo) {
-        return md5(sparkingLockCTPProperties.getSecret() + deviceNo + DateTimeUtils.currentDate()+sparkingLockCTPProperties.getSecret(), sign);
+        return md5(sparkingLockCTPProperties.getSecret() + deviceNo + DateTimeUtils.currentDate() + sparkingLockCTPProperties.getSecret(), sign);
     }
 
     /**
