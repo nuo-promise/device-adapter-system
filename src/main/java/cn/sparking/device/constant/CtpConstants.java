@@ -9,11 +9,11 @@ public class CtpConstants {
     // 地锁类型
     public static final String CTP_TYPE = "CTP";
 
-    public static final String CTP_REQUEST_PARK_STATUS = "ParkStatus";
+    public static final String CTP_REQUEST_PARK_STATUS = "PARK_STATUS";
 
-    public static final String CTP_REQUEST_WORK_MODE = "WorkMode";
+    public static final String CTP_REQUEST_WORK_MODE = "WORK_MODE";
 
-    public static final String CTP_REQUEST_SEARCH_BOARD = "searchBoard";
+    public static final String CTP_REQUEST_SEARCH_BOARD = "SEARCH_BOARD";
 
     public static final String CTP_VERSION = "v1.0";
 

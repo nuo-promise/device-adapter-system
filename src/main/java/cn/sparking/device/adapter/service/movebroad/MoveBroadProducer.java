@@ -61,7 +61,6 @@ public class MoveBroadProducer extends BaseProducer {
             });
     }
 
-    @Data
     public static class MoveBroadData extends BaseMQData {
 
         private static final long serialVersionUID = 2545834301908607338L;
@@ -71,6 +70,10 @@ public class MoveBroadProducer extends BaseProducer {
         MoveBroadData(final Object data, final String type) {
             super("MoveBroad", type);
             this.data = data;
+        }
+
+        public Object getData() {
+            return this.data;
         }
 
         /**

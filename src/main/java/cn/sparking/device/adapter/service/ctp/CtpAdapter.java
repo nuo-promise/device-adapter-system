@@ -32,7 +32,7 @@ import static cn.sparking.device.constant.CtpConstants.WORK_ALL_TIME;
 import static cn.sparking.device.exception.CtpErrorCode.SUCCESS;
 
 @Component("CtpAdapter")
-public abstract class CtpAdapter extends BaseAdapter {
+public class CtpAdapter extends BaseAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MoveBroadAdapter.class);
 
@@ -96,7 +96,6 @@ public abstract class CtpAdapter extends BaseAdapter {
                     parkStatus = true;
                     break;
                 case CtpConstants.PARK_LEAVE:
-                    parkStatus = false;
                     break;
                 case RESET:
                     status = RESET;
@@ -117,7 +116,6 @@ public abstract class CtpAdapter extends BaseAdapter {
             item.setStatus(status);
             item.setParkStatus(parkStatus);
             item.setArmsStatus(armsStatus);
-            LOG.info("CTP Build PublishLockStatus Data: " + JSON.toJSONString(item));
 
             /**
              * save redis
@@ -126,7 +124,11 @@ public abstract class CtpAdapter extends BaseAdapter {
             /**
              * producer mq.
              */
-            new CtpProducer(rabbitmqProperties).publishLockStatus(item);
+            if (new CtpProducer(rabbitmqProperties).publishLockStatus(item) == SUCCESS) {
+               LOG.info("CTP PublishParkStatus 发送成功,对方已收到" + JSON.toJSONString(item));
+            } else {
+               LOG.info("CTP PublishParkStatus ERROR: " + JSON.toJSONString(item));
+            }
             result.put("ErrorCode", SUCCESS);
             result.put("ErrorMsg", "操作成功");
             return result;

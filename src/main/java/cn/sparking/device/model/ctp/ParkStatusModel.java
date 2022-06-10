@@ -1,6 +1,7 @@
 package cn.sparking.device.model.ctp;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class ParkStatusModel implements Serializable {
     private static final long serialVersionUID = -16026974984618756L;
 
     // 设备编码 - 地锁编号
-    @JSONField(name = "DeviceNo")
+    @JsonProperty("DeviceNo")
     private String lockCode;
 
     // 车位编号
@@ -45,22 +46,22 @@ public class ParkStatusModel implements Serializable {
     private Long eventTime;
 
     // 数据类型
-    @JSONField(name = "DataType")
+    @JsonProperty("DataType")
     private Integer dataType;
 
     // 电池电压
-    @JSONField(name = "Voltage")
+    @JsonProperty("Voltage")
     private String voltage;
 
     // 状态码1 8位16进制字符串
-    @JSONField(name = "StatusOne")
+    @JsonProperty("StatusOne")
     private String statusOne;
 
     // 状态码2 12位16进制字符串
-    @JSONField(name = "StatusTwo")
+    @JsonProperty("StatusTwo")
     private String statusTwo;
 
     // 数据时间 yyyy-MM-dd HH:mm:ss
-    @JSONField(name = "DataTime")
+    @JsonProperty("DateTime")
     private String time;
 }

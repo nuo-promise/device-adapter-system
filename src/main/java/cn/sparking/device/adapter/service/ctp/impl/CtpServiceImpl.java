@@ -44,7 +44,11 @@ public class CtpServiceImpl implements CtpService {
                 result.put("ErrorMsg", "请求验证失败");
                 return result;
             }
-            return (JSONObject) adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(parkStatusModel);
+            return (JSONObject) adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(
+                    CtpRequest.<ParkStatusModel>builder()
+                    .cmd(CtpConstants.CTP_REQUEST_PARK_STATUS)
+                    .body(parkStatusModel)
+                    .build());
         } catch (SparkingException ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
@@ -60,12 +64,10 @@ public class CtpServiceImpl implements CtpService {
                 result.put("ErrorMsg", "请求验证失败");
                 return result;
             }
-            CtpRequest<WorkModeModel> request = CtpRequest.<WorkModeModel>builder()
+            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(CtpRequest.<WorkModeModel>builder()
                     .cmd(CtpConstants.CTP_REQUEST_WORK_MODE)
                     .body(workMode)
-                    .build();
-            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(request);
-
+                    .build());
         } catch (SparkingException ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
@@ -82,11 +84,10 @@ public class CtpServiceImpl implements CtpService {
                 result.put("ErrorMsg", "请求验证失败");
                 return result;
             }
-            CtpRequest<SearchBoardModel> request = CtpRequest.<SearchBoardModel>builder()
+            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(CtpRequest.<SearchBoardModel>builder()
                     .cmd(CtpConstants.CTP_REQUEST_SEARCH_BOARD)
                     .body(searchBoard)
-                    .build();
-            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(request);
+                    .build());
 
         } catch (SparkingException ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));

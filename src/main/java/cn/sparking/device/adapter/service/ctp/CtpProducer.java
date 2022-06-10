@@ -9,9 +9,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component("CtpAdapter")
 public class CtpProducer extends BaseProducer {
 
     private static final Logger LOG = LoggerFactory.getLogger(CtpProducer.class);
@@ -33,14 +31,13 @@ public class CtpProducer extends BaseProducer {
      * producer device status.
      * @param parkStatusModel {@link ParkStatusModel}
      */
-    public void publishLockStatus(final ParkStatusModel parkStatusModel) {
-        send(rabbitmqProperties.getExchange(), TOPICPREFIX + "status" + TOPICLASTFIX,
+    public int publishLockStatus(final ParkStatusModel parkStatusModel) {
+        return send(rabbitmqProperties.getExchange(), TOPICPREFIX + "status" + TOPICLASTFIX,
                 CtpConstants.CTP_REQUEST_PARK_STATUS, CtpConstants.CTP_FLAG,
                 CtpConstants.CTP_VERSION, CtpConstants.CTP_CHARACTER,
                 JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(parkStatusModel), "save")), null);
     }
 
-    @Data
     public static class CtpData extends BaseMQData {
 
         private static final long serialVersionUID = 2545834301908607338L;
@@ -52,6 +49,9 @@ public class CtpProducer extends BaseProducer {
             this.data = data;
         }
 
+        public Object getData() {
+            return this.data;
+        }
         /**
          * To String.
          * @return String

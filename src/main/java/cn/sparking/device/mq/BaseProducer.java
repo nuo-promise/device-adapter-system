@@ -19,6 +19,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import static cn.sparking.device.exception.CtpErrorCode.REQUEST_TIMEOUT;
+import static cn.sparking.device.exception.CtpErrorCode.SUCCESS;
+
+
 /**
  * MQ Basic Production.
  */
@@ -117,16 +121,15 @@ public class BaseProducer {
             if (Objects.nonNull(receiveMessage)) {
                 JSONObject retJson = JSON.parseObject(new String((byte[]) receiveMessage));
                 LOG.info("接收 C 端 RPC 消费返回: " + retJson.toJSONString());
-                if (!retJson.containsKey("code") || !retJson.getString("code").equals("00000")) {
+                if (!retJson.containsKey("code") || retJson.getInteger("code") != 200) {
                    LOG.warn("C 端消费 RPC 设备状态信息失败, 下面执行 HTTP 请求 " + msg);
-
+                   return REQUEST_TIMEOUT;
                 }
+                return SUCCESS;
             }
         } catch (SparkingException e) {
             Arrays.stream(e.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
+        return REQUEST_TIMEOUT;
     }
-
-
-
 }
