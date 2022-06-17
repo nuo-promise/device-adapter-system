@@ -2,6 +2,7 @@ package cn.sparking.device.mq;
 
 import cn.sparking.device.exception.SparkingException;
 import cn.sparking.device.adapter.factory.AdapterManager;
+import cn.sparking.device.model.ctp.SpkCommonResult;
 import cn.sparking.device.tools.DateTimeUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -116,15 +117,13 @@ public class BaseProducer {
                 });
             }
             Message message = new Message(msg.getBytes(StandardCharsets.UTF_8), messageProperties);
-
             Object receiveMessage = RABBITTEMPLATE.convertSendAndReceive(exchange, topic, message);
             if (Objects.isNull(receiveMessage)) {
                 return REQUEST_TIMEOUT;
             }
-
-            JSONObject retJson = JSON.parseObject(new String((byte[]) receiveMessage));
-            LOG.info("接收 C 端 RPC 消费返回: " + retJson.toJSONString());
-            if (!retJson.containsKey("code") || retJson.getInteger("code") != 200) {
+            SpkCommonResult result = JSONObject.parseObject(new String((byte[])receiveMessage,StandardCharsets.UTF_8), SpkCommonResult.class);
+            LOG.info("接收 C 端 RPC 消费返回: " + result);
+            if (Objects.isNull(result) || result.getCode() != 200) {
                 return REQUEST_TIMEOUT;
             }
             return SUCCESS;

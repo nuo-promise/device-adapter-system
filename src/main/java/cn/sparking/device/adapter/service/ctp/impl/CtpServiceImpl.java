@@ -123,8 +123,8 @@ public class CtpServiceImpl implements CtpService {
      * @return boolean
      */
     private boolean md5(final String data, final String token) {
-        //String keyStr = DigestUtils.md5Hex(data.toUpperCase()).toUpperCase();
-        String keyStr = DigestUtils.md5Hex(data.toUpperCase());
+        String keyStr = DigestUtils.md5Hex(data.toUpperCase()).toUpperCase();
+//        String keyStr = DigestUtils.md5Hex(data.toUpperCase());
         LOG.info("CTP MD5 Value: " + keyStr);
         if (keyStr.equals(token)) {
             return true;
