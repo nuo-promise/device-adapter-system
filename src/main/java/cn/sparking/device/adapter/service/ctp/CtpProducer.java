@@ -31,11 +31,11 @@ public class CtpProducer extends BaseProducer {
      * producer device status.
      * @param parkStatusModel {@link ParkStatusModel}
      */
-    public int publishLockStatus(final ParkStatusModel parkStatusModel) {
+    public int publishLockStatus(final ParkStatusModel parkStatusModel, final String type) {
         return send(rabbitmqProperties.getExchange(), TOPICPREFIX + "status" + TOPICLASTFIX,
                 CtpConstants.CTP_REQUEST_PARK_STATUS, CtpConstants.CTP_FLAG,
                 CtpConstants.CTP_VERSION, CtpConstants.CTP_CHARACTER,
-                JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(parkStatusModel), "save")), null);
+                JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(parkStatusModel), type)), null);
     }
 
     public static class CtpData extends BaseMQData {

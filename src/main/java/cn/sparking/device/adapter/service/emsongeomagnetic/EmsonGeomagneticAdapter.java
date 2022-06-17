@@ -26,6 +26,8 @@ import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
 
+import static cn.sparking.device.constant.EmsonGeomagneticConstants.EMSON_OTHER_PROJECT_NO;
+
 @Component("EmsonGeomagneticAdapter")
 public class EmsonGeomagneticAdapter extends BaseAdapter {
 
@@ -131,7 +133,7 @@ public class EmsonGeomagneticAdapter extends BaseAdapter {
         JSONObject requestObj = new JSONObject();
         requestObj.put("parkId", String.valueOf(parkID));
         LOG.info("请求地磁场库对应的项目编号报文:" + requestObj.toJSONString());
-        HttpResponse httpResponse = HttpUtils.post(bs_url, requestObj.toJSONString());
+        HttpResponse httpResponse = HttpUtils.post(bs_url + EMSON_OTHER_PROJECT_NO, requestObj.toJSONString());
         if (Objects.nonNull(httpResponse) && httpResponse.isOk()) {
             JSONObject result = JSON.parseObject(httpResponse.body());
             if (result.getString("code").equals("00000") && Objects.nonNull(result.getJSONObject("data"))) {

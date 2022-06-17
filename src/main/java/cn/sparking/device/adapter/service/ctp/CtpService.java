@@ -2,8 +2,6 @@ package cn.sparking.device.adapter.service.ctp;
 
 import cn.sparking.device.model.ctp.ControlModel;
 import cn.sparking.device.model.ctp.ParkStatusModel;
-import cn.sparking.device.model.ctp.SearchBoardModel;
-import cn.sparking.device.model.ctp.WorkModeModel;
 import cn.sparking.device.model.response.DeviceAdapterResult;
 import com.alibaba.fastjson.JSONObject;
 
@@ -20,18 +18,18 @@ public interface CtpService {
 
      /**
       * 查询工作模式
-      * @param workMode {@link WorkModeModel}
+      * @param deviceNo device no
       * @return {@link JSONObject}
       */
-     JSONObject workMode(String sign, WorkModeModel workMode);
+     JSONObject workMode(String sign, String deviceNo);
 
 
      /**
       * 查询是否可以降板
-      * @param searchBoard {@link SearchBoardModel}
+      * @param deviceNo {@link String}
       * @return {@link JSONObject}
       */
-     JSONObject searchBoard(String sign, SearchBoardModel searchBoard);
+     JSONObject searchBoard(String sign, String deviceNo);
 
      /**
       * 地锁控制接口.

@@ -56,17 +56,17 @@ public class CtpServiceImpl implements CtpService {
     }
 
     @Override
-    public JSONObject workMode(String sign, WorkModeModel workMode) {
+    public JSONObject workMode(String sign, String deviceNo) {
         JSONObject result =  new JSONObject();
         try {
-            if (!invoke(sign, workMode.getDeviceNo())) {
+            if (!invoke(sign, deviceNo)) {
                 result.put("ErrorCode", CtpErrorCode.AUTH_ERROR);
                 result.put("ErrorMsg", "请求验证失败");
                 return result;
             }
-            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(CtpRequest.<WorkModeModel>builder()
+            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(CtpRequest.<String>builder()
                     .cmd(CtpConstants.CTP_REQUEST_WORK_MODE)
-                    .body(workMode)
+                    .body(deviceNo)
                     .build());
         } catch (SparkingException ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
@@ -75,18 +75,18 @@ public class CtpServiceImpl implements CtpService {
     }
 
     @Override
-    public JSONObject searchBoard(String sign, SearchBoardModel searchBoard) {
+    public JSONObject searchBoard(String sign, String  deviceNo) {
         JSONObject result =  new JSONObject();
         try {
 
-            if (!invoke(sign, searchBoard.getDeviceNo())) {
+            if (!invoke(sign, deviceNo)) {
                 result.put("ErrorCode", CtpErrorCode.AUTH_ERROR);
                 result.put("ErrorMsg", "请求验证失败");
                 return result;
             }
-            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(CtpRequest.<SearchBoardModel>builder()
+            adapterManager.getAdaptedService(CtpConstants.CTP_ADAPTER).adapted(CtpRequest.<String>builder()
                     .cmd(CtpConstants.CTP_REQUEST_SEARCH_BOARD)
-                    .body(searchBoard)
+                    .body(deviceNo)
                     .build());
 
         } catch (SparkingException ex) {
@@ -123,7 +123,8 @@ public class CtpServiceImpl implements CtpService {
      * @return boolean
      */
     private boolean md5(final String data, final String token) {
-        String keyStr = DigestUtils.md5Hex(data.toUpperCase()).toUpperCase();
+        //String keyStr = DigestUtils.md5Hex(data.toUpperCase()).toUpperCase();
+        String keyStr = DigestUtils.md5Hex(data.toUpperCase());
         LOG.info("CTP MD5 Value: " + keyStr);
         if (keyStr.equals(token)) {
             return true;

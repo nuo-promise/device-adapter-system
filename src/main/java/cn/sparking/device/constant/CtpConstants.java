@@ -19,7 +19,21 @@ public class CtpConstants {
 
     public static final String CTP_CHARACTER = "UTF-8";
 
+    // 数据服务补传设备状态
+    public static final String CTP_DATA_SEND_RESOURCE = "/data-api/parkStatus";
+
+    // B 端查询CTP工作模式
+    public static final String CTP_WORK_MODEL = "/";
+
+    // 查询当前是否可以降板
+    public static final String CTP_SEARCH_BOARD = "/data-api/searchBoardStatus";
+
     // =========================== 状态码定义 ===============================
+
+    public static final String DATA_ARM_SAVE = "arm_save";
+    public static final String DATA_SAVE = "save";
+
+    public static final String DATA_EVENT = "event";
     // 地锁状态 在线
     public static final int ONLINE = 0;
     // 降板

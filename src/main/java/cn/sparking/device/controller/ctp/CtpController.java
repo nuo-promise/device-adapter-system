@@ -3,14 +3,14 @@ package cn.sparking.device.controller.ctp;
 import cn.sparking.device.adapter.service.ctp.CtpService;
 import cn.sparking.device.model.ctp.ControlModel;
 import cn.sparking.device.model.ctp.ParkStatusModel;
-import cn.sparking.device.model.ctp.SearchBoardModel;
-import cn.sparking.device.model.ctp.WorkModeModel;
 import cn.sparking.device.model.response.DeviceAdapterResult;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,15 +31,15 @@ public class CtpController {
     }
 
     @ResponseBody
-    @PostMapping("/ctpWorkModel")
-    public JSONObject workModel(@RequestHeader("Sign") String sign, @RequestBody final WorkModeModel workModeModel) {
-        return ctpService.workMode(sign, workModeModel);
+    @GetMapping("/ctpWorkModel")
+    public JSONObject workModel(@RequestHeader("Sign") String sign, @RequestParam("DeviceNo")final String deviceNo) {
+        return ctpService.workMode(sign, deviceNo);
     }
 
     @ResponseBody
-    @PostMapping("/ctpSearchBoard")
-    public JSONObject searchBoard(@RequestHeader("Sign") String sign, @RequestBody final SearchBoardModel searchBoard) {
-        return ctpService.searchBoard(sign, searchBoard);
+    @GetMapping("/ctpSearchBoard")
+    public JSONObject searchBoard(@RequestHeader("Sign") String sign, @RequestParam("DeviceNo") final String deviceNo) {
+        return ctpService.searchBoard(sign, deviceNo);
     }
 
     @ResponseBody

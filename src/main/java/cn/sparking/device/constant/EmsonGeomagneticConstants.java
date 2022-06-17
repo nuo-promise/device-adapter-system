@@ -90,4 +90,8 @@ public class EmsonGeomagneticConstants implements Constants {
     public static final int EMSON_ERROR_101 = 101;
 
     public static final String EMSON_ERROR_101_MSG = "Data Valid Failed";
+
+
+    // 获取 第三方项目编号
+    public static final String EMSON_OTHER_PROJECT_NO = "/secretKey/getInfoByOtherProjectNo";
 }

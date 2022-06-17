@@ -7,6 +7,8 @@ public class CtpErrorCode {
 
     public static final Integer SUCCESS = 0;
 
+    public static final Integer DATA_SUCCESS = 200;
+
     // 请求验证失败
     public static final Integer AUTH_ERROR = 10001;
 

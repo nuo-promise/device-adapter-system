@@ -118,15 +118,16 @@ public class BaseProducer {
             Message message = new Message(msg.getBytes(StandardCharsets.UTF_8), messageProperties);
 
             Object receiveMessage = RABBITTEMPLATE.convertSendAndReceive(exchange, topic, message);
-            if (Objects.nonNull(receiveMessage)) {
-                JSONObject retJson = JSON.parseObject(new String((byte[]) receiveMessage));
-                LOG.info("接收 C 端 RPC 消费返回: " + retJson.toJSONString());
-                if (!retJson.containsKey("code") || retJson.getInteger("code") != 200) {
-                   LOG.warn("C 端消费 RPC 设备状态信息失败, 下面执行 HTTP 请求 " + msg);
-                   return REQUEST_TIMEOUT;
-                }
-                return SUCCESS;
+            if (Objects.isNull(receiveMessage)) {
+                return REQUEST_TIMEOUT;
             }
+
+            JSONObject retJson = JSON.parseObject(new String((byte[]) receiveMessage));
+            LOG.info("接收 C 端 RPC 消费返回: " + retJson.toJSONString());
+            if (!retJson.containsKey("code") || retJson.getInteger("code") != 200) {
+                return REQUEST_TIMEOUT;
+            }
+            return SUCCESS;
         } catch (SparkingException e) {
             Arrays.stream(e.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
