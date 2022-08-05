@@ -31,11 +31,29 @@ public class CtpProducer extends BaseProducer {
      * producer device status.
      * @param parkStatusModel {@link ParkStatusModel}
      */
-    public int publishLockStatus(final ParkStatusModel parkStatusModel, final String type) {
+    public int publishLockData(final ParkStatusModel parkStatusModel, final String type) {
         return send(rabbitmqProperties.getExchange(), TOPICPREFIX + "status" + TOPICLASTFIX,
                 CtpConstants.CTP_REQUEST_PARK_STATUS, CtpConstants.CTP_FLAG,
                 CtpConstants.CTP_VERSION, CtpConstants.CTP_CHARACTER,
                 JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(parkStatusModel), type)), null);
+    }
+
+    /**
+     * 设备状态数据,非必须准确到达.
+     * @param parkStatusModel {@link ParkStatusModel}
+     * @param type           消息类型
+     */
+    public void publishLockStatus(final ParkStatusModel parkStatusModel, final String type) {
+        send(rabbitmqProperties.getExchange(), TOPICPREFIX + "status" + TOPICLASTEVENTFIX,
+                CtpConstants.CTP_REQUEST_PARK_STATUS, CtpConstants.CTP_FLAG,
+                CtpConstants.CTP_VERSION, CtpConstants.CTP_CHARACTER,
+                JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(parkStatusModel), type)), null, success -> {
+                if (success) {
+                    LOG.info("Deliver CTP Lock-Status message success, LockCode = " + parkStatusModel.getLockCode());
+                } else {
+                    LOG.error("Deliver CTP Lock-Status message failed, LockCode = " + parkStatusModel.getLockCode());
+                }
+            });
     }
 
     public static class CtpData extends BaseMQData {

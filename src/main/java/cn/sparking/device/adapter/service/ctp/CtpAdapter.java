@@ -17,12 +17,14 @@ import cn.sparking.device.tools.HttpUtils;
 import cn.sparking.device.tools.ReactiveRedisUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -52,7 +54,7 @@ public class CtpAdapter extends BaseAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MoveBroadAdapter.class);
 
-    private static final int REDIS_EXPIRED_INTERVAL = 400;
+    private static final int REDIS_EXPIRED_INTERVAL = 7200;
 
     @Value("${sparking.shard.data.url}")
     private String shard_data_url;
@@ -94,9 +96,9 @@ public class CtpAdapter extends BaseAdapter {
     private JSONObject parkStatus(final ParkStatusModel parkStatusModel) {
         JSONObject result = new JSONObject();
         return Optional.ofNullable(parkStatusModel).map(item -> {
-            boolean parkStatus = false;
+            String parkStatus = "";
             int status = ONLINE;
-            String armsStatus = "DOWN";
+            String armsStatus = "";
             item.setLockType(CTP_TYPE);
             item.setStatus(ONLINE);
             item.setWarn(false);
@@ -115,9 +117,10 @@ public class CtpAdapter extends BaseAdapter {
                     status = HEARTBEAT;
                     break;
                 case PARK_ENTER:
-                    parkStatus = true;
+                    parkStatus = "TRUE";
                     break;
                 case PARK_LEAVE:
+                    parkStatus = "FALSE";
                     break;
                 case RESET:
                     status = RESET;
@@ -159,23 +162,33 @@ public class CtpAdapter extends BaseAdapter {
             /**
              * save redis
              */
+            String parkStatusModelStr = getParkStatusModel(item.getLockCode());
+            if (StringUtils.isNotBlank(parkStatusModelStr)) {
+                ParkStatusModel tmpParkStatusModel = JSON.parseObject(parkStatusModelStr, ParkStatusModel.class);
+                if (StringUtils.isEmpty(parkStatus)) {
+                    item.setParkStatus(tmpParkStatusModel.getParkStatus());
+                }
+                if (StringUtils.isEmpty(armsStatus)) {
+                    item.setArmsStatus(tmpParkStatusModel.getArmsStatus());
+                }
+            }
+
             opsValue(item);
+
             /**
              * producer mq.
              */
-
-            if (new CtpProducer(rabbitmqProperties).publishLockStatus(item, dataSendType) == SUCCESS) {
-               LOG.info("CTP PublishParkStatus 发送成功,对方已收到" + JSON.toJSONString(item));
+            if (new CtpProducer(rabbitmqProperties).publishLockData(item, dataSendType) == SUCCESS) {
+                LOG.info("CTP PublishParkStatus 发送成功,对方已收到" + JSON.toJSONString(item));
             } else {
-               if (dataSendType.equals(DATA_SAVE)) {
-                   LOG.info("CTP PublishParkStatus ERROR => C 端消费 RPC 设备状态信息返回为空, 下面执行 HTTP 请求: " + JSON.toJSONString(item));
-                   JSONObject httpResponse = sendParkStatusDataByHttp(JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(item), dataSendType)));
-                   if (Objects.isNull(httpResponse) || !httpResponse.containsKey("code") || !httpResponse.getInteger("code").equals(SparkingCommonCode.SUCCESS)) {
-                       LOG.error("HTTP sendParkStatusDataByHttp ERROR ==> [发送设备状态信息处理失败, 将数据保存日志,后续做落库操作] " + JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(item), "save")));
-                   }
-               } else {
-                   LOG.info("事件类型,不是业务关心的车位数据,可以忽略: " + dataSendType);
-               }
+                if(dataSendType.equals(DATA_SAVE)) {
+                    LOG.info("CTP PublishParkStatus ERROR => C 端消费 RPC 设备状态信息返回为空, 下面执行 HTTP 请求: " + JSON.toJSONString(item));
+                    JSONObject httpResponse = sendParkStatusDataByHttp(JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(item), dataSendType)));
+                    if (Objects.isNull(httpResponse) || !httpResponse.containsKey("code") || !httpResponse.getInteger("code").equals(SparkingCommonCode.SUCCESS)) {
+                        LOG.error("HTTP sendParkStatusDataByHttp ERROR ==> [发送设备状态信息处理失败, 将数据保存日志,后续做落库操作] " + JSON.toJSONString(new CtpProducer.CtpData(JSON.toJSONString(item), "save")));
+                    }
+                }
+
             }
             result.put("ErrorCode", SUCCESS);
             result.put("ErrorMsg", "操作成功");
@@ -314,5 +327,14 @@ public class CtpAdapter extends BaseAdapter {
                     }
                 }
         );
+    }
+
+    /**
+     * 获取redis中停车数据.
+     * @param lockCode {@link String}
+     * @return {@link String}
+     */
+    private String getParkStatusModel(final String lockCode) {
+        return (String) ReactiveRedisUtils.getData(lockCode).block(Duration.ofMillis(3000));
     }
 }

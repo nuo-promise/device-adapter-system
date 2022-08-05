@@ -12,4 +12,8 @@ public class SparkingLockCTPProperties {
     private Boolean active;
 
     private String secret;
+
+    private String factoryId;
+
+    private String url;
 }

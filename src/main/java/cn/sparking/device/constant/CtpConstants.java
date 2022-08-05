@@ -2,6 +2,12 @@ package cn.sparking.device.constant;
 
 public class CtpConstants {
 
+    public static final String CTP_CMD_UP_TYPE = "up";
+
+    public static final String CTP_CMD_DOWN_TYPE = "down";
+
+    public static final String CTP_CMD_SYNC_TYPE = "sync";
+
     public static final String CTP_ADAPTER = "CtpAdapter";
 
     public static final String CTP_FLAG = "CTP";
@@ -21,6 +27,9 @@ public class CtpConstants {
 
     // 数据服务补传设备状态
     public static final String CTP_DATA_SEND_RESOURCE = "/data-api/parkStatus";
+
+    // 设备控制
+    public static final String CTP_CMD_CONTROL_METHOD = "/api/LockControl";
 
     // B 端查询CTP工作模式
     public static final String CTP_WORK_MODEL = "/";

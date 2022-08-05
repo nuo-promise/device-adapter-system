@@ -105,7 +105,9 @@ public class RabbitMqConfiguration {
      */
     @Bean("MQCloudTemplate")
     public RabbitTemplate mqCloudTemplate(@Qualifier("MQCloudConnectionFactory") final CachingConnectionFactory factory) {
-        return new RabbitTemplate(factory);
+        RabbitTemplate template = new RabbitTemplate(factory);
+        template.setUseDirectReplyToContainer(false);
+        return template;
     }
 
     /**

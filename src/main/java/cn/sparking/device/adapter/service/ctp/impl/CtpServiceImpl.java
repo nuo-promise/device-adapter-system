@@ -1,5 +1,7 @@
 package cn.sparking.device.adapter.service.ctp.impl;
 
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpStatus;
 import cn.sparking.device.adapter.factory.AdapterManager;
 import cn.sparking.device.adapter.service.ctp.CtpService;
 import cn.sparking.device.configure.properties.SparkingLockCTPProperties;
@@ -13,15 +15,20 @@ import cn.sparking.device.model.ctp.SearchBoardModel;
 import cn.sparking.device.model.ctp.WorkModeModel;
 import cn.sparking.device.model.response.DeviceAdapterResult;
 import cn.sparking.device.tools.DateTimeUtils;
+import cn.sparking.device.tools.HttpUtils;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Objects;
 
+@Slf4j
 @Service
 public class CtpServiceImpl implements CtpService {
     private static final Logger LOG = LoggerFactory.getLogger(CtpServiceImpl.class);
@@ -39,6 +46,7 @@ public class CtpServiceImpl implements CtpService {
     public JSONObject parkStatus(String sign, ParkStatusModel parkStatusModel) {
         JSONObject result = new JSONObject();
         try {
+            log.info("接收到CTP数据上报: " + parkStatusModel.toString());
             if (!invoke(sign, parkStatusModel.getLockCode())) {
                 result.put("ErrorCode", CtpErrorCode.AUTH_ERROR);
                 result.put("ErrorMsg", "请求验证失败");
@@ -98,12 +106,31 @@ public class CtpServiceImpl implements CtpService {
     @Override
     public DeviceAdapterResult controlCmd(ControlModel controlModel) {
         try {
-
+            log.info("接收到控制命令：{}", controlModel);
+            JSONObject request = new JSONObject();
+            request.put("FacotryId", sparkingLockCTPProperties.getFactoryId());
+            request.put("DeviceNo", controlModel.getDeviceNo());
+            request.put("CmdType", controlModel.getCmdType());
+            if (controlModel.getCmdType().equals(CtpConstants.CTP_CMD_SYNC_TYPE) && StringUtils.isBlank(controlModel.getData())) {
+                return DeviceAdapterResult.error(CtpErrorCode.PARAM_ERROR, "参数错误");
+            } else {
+                request.put("Data", controlModel.getData());
+            }
+            log.info("发送控制指令给CTP: " + request.toJSONString());
+            HttpResponse httpResponse = HttpUtils.post(sparkingLockCTPProperties.getUrl() + CtpConstants.CTP_CMD_CONTROL_METHOD, request.toJSONString(), getSign(controlModel.getDeviceNo()));
+            if (Objects.isNull(httpResponse) || httpResponse.getStatus() != 200) {
+                return DeviceAdapterResult.error(HttpStatus.HTTP_INTERNAL_ERROR, "http请求失败");
+            }
+            JSONObject response = JSONObject.parseObject(httpResponse.body());
+            if (response.getInteger("ErrorCode") != 0) {
+                return DeviceAdapterResult.error(response.getInteger("ErrorCode"), response.getString("ErrorMsg"));
+            }
+            return DeviceAdapterResult.success("操作成功");
             // 获取到上游发送控制指令,进行拼接发送目标服务器
         } catch (SparkingException ex) {
             Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
         }
-        return null;
+        return DeviceAdapterResult.error("操作失败");
     }
 
     /**
@@ -117,14 +144,22 @@ public class CtpServiceImpl implements CtpService {
     }
 
     /**
+     * 生成 CTP sign.
+     * @param deviceNo deviceNo
+     * @return {@link String}
+     */
+    private String getSign(final String deviceNo) {
+        return md5(sparkingLockCTPProperties.getSecret() + deviceNo + DateTimeUtils.currentDate() + sparkingLockCTPProperties.getSecret());
+    }
+    /**
      * MD5.
      * @param data the data
      * @param token the token
      * @return boolean
      */
     private boolean md5(final String data, final String token) {
-        String keyStr = DigestUtils.md5Hex(data.toUpperCase()).toUpperCase();
-//        String keyStr = DigestUtils.md5Hex(data.toUpperCase());
+//        String keyStr = DigestUtils.md5Hex(data.toUpperCase()).toUpperCase();
+        String keyStr = DigestUtils.md5Hex(data.toUpperCase());
         LOG.info("CTP MD5 Value: " + keyStr);
         if (keyStr.equals(token)) {
             return true;
@@ -132,5 +167,14 @@ public class CtpServiceImpl implements CtpService {
             LOG.warn("CTP Current MD5 :" + keyStr + ", Data Token : " + token);
         }
         return false;
+    }
+
+    /**
+     * 生成密钥.
+     * @param data {@link String}
+     * @return {@link String}
+     */
+    private String md5(final String data) {
+        return DigestUtils.md5Hex(data.toUpperCase());
     }
 }

@@ -5,6 +5,8 @@ package cn.sparking.device.exception;
  */
 public class CtpErrorCode {
 
+    public static final Integer PARAM_ERROR = 10021;
+
     public static final Integer SUCCESS = 0;
 
     public static final Integer DATA_SUCCESS = 200;

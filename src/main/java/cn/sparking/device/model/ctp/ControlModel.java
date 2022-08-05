@@ -1,5 +1,7 @@
 package cn.sparking.device.model.ctp;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +23,13 @@ public class ControlModel implements Serializable {
 
     private static final long serialVersionUID = 4197342713349993187L;
 
+    @NotNull
+    @NotBlank
     // 设备编码
     private String deviceNo;
 
+    @NotNull
+    @NotBlank
     // 命令类型 up - 升板 down - 降板 syn - 锁相关操作
     private String cmdType;
 

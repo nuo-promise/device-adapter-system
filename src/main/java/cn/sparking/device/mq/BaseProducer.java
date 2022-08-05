@@ -1,10 +1,9 @@
 package cn.sparking.device.mq;
 
-import cn.sparking.device.exception.SparkingException;
 import cn.sparking.device.adapter.factory.AdapterManager;
+import cn.sparking.device.exception.SparkingException;
 import cn.sparking.device.model.ctp.SpkCommonResult;
 import cn.sparking.device.tools.DateTimeUtils;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

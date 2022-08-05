@@ -50,4 +50,24 @@ public class HttpUtils {
         }
         return null;
     }
+
+
+    /**
+     * 发送给CTP控制接口.
+     * @param url url
+     * @param param param
+     * @param sign sign
+     * @return {@link HttpResponse}
+     */
+    public static HttpResponse post(final String url, final String param, final String sign) {
+        try {
+            return HttpRequest.post(url)
+                    .header(Header.CONTENT_TYPE, "application/json")
+                    .header("Sign", sign)
+                    .body(param).timeout(3000).execute();
+        } catch (Exception ex) {
+            Arrays.stream(ex.getStackTrace()).forEach(item -> LOG.error(item.toString()));
+        }
+        return null;
+    }
 }
