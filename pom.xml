@@ -14,11 +14,9 @@
 	<name>device-adapter-system</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<skipTests>true</skipTests>
 	</properties>
 	<dependencies>

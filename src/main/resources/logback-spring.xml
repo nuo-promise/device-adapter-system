@@ -17,7 +17,7 @@
             <file>${PRO_FILE_PATH}</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <!-- 文件名 -->
-                <fileNamePattern>${LOG_DIR}/web_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOG_DIR}/device_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <!-- 日志文件保留天数 -->
                 <MaxHistory>30</MaxHistory>
                 <!-- 总日志文件大小 -->
@@ -30,7 +30,7 @@
                 <pattern>${PATTERN}</pattern>
             </encoder>
         </appender>
-        <logger name="com.suparking.web_manager" level="INFO" additivity="false">
+        <logger name="com.suparking.device" level="INFO" additivity="false">
             <appender-ref ref="PROD_FILE" />
         </logger>
         <root level="INFO">
@@ -66,7 +66,7 @@
             <file>${TEST_FILE_PATH}</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <!-- 文件名 -->
-                <fileNamePattern>${LOG_DIR}/web_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOG_DIR}/device_%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <!-- 日志文件保留天数 -->
                 <MaxHistory>180</MaxHistory>
                 <!-- 总日志文件大小 -->
