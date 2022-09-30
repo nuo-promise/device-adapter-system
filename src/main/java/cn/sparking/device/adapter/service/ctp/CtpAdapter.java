@@ -9,8 +9,6 @@ import cn.sparking.device.exception.SparkingCommonCode;
 import cn.sparking.device.exception.SparkingException;
 import cn.sparking.device.model.ctp.CtpRequest;
 import cn.sparking.device.model.ctp.ParkStatusModel;
-import cn.sparking.device.model.ctp.SearchBoardModel;
-import cn.sparking.device.model.ctp.WorkModeModel;
 import cn.sparking.device.model.response.ctp.WorkModeResponse;
 import cn.sparking.device.tools.DateTimeUtils;
 import cn.sparking.device.tools.HttpUtils;
