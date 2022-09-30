@@ -3,31 +3,34 @@ package cn.sparking.device.model.lingpark;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class LingParkBaseRequest {
     // 身份ID,领泊发放
-    String appid;
+    private String appId;
 
     // 身份ID
-    String comId;
+    private String comId;
 
     // 模块名称
-    String module;
+    private String module;
 
     // 服务名称
-    String service;
+    private String service;
 
     // 方法名称
-    String method;
+    private String method;
 
     // 事件推送时间
-    String timestamp;
+    private String timestamp;
 
     // 接口版本
-    String ve;
+    private String ve;
 
     //签名
-    String sign;
+    private String sign;
 }

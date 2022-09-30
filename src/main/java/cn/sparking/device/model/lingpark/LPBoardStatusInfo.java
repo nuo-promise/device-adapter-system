@@ -6,24 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 驻车器车位状态信息.
- */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class LPParkStatusInfo extends LingParkBaseRequest {
-
-    String pushData;
+@NoArgsConstructor
+public class LPBoardStatusInfo extends LingParkBaseRequest {
+    private String pushData;
 
     @Data
     @Builder
-    static class ParkStatusInfo {
+    static class BoardStatus {
         // 设备编号
         private String deviceSn;
-        // 车位状态 5 有车 2 空闲
-        private short car;
 
         // 取车编码
         private String code;
@@ -31,15 +25,16 @@ public class LPParkStatusInfo extends LingParkBaseRequest {
         // 翻板状态 1 升起 2 降下 3 未知
         private short lock;
 
-        // 联网状态 1 在线 0 离线
-        private short netState;
+        // 1 有车升翻板 2 降翻板
+        private short type;
     }
 
     /**
      * 将字符串转成对象.
      * @return ParkingInfo
      */
-    public ParkStatusInfo PushDataConvertParkStatusInfo() {
-        return JSONObject.parseObject(pushData, ParkStatusInfo.class);
+    public BoardStatus PushDataConvertBoardStatus() {
+        return JSONObject.parseObject(pushData, BoardStatus.class);
     }
+
 }

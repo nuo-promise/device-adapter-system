@@ -27,4 +27,13 @@ public class LingParkErrorCode {
 
     // 参数不存在
     public static final String PARAMS_NOT_EXIST = "10011";
+
+    // 系统异常
+    public static final String LINGBO_SYSTEM_ERROR = "1002";
+
+    // 参数异常
+    public static final String PARAMS_ERROR = "1003";
+
+    // 订单免费中
+    public static final String ORDER_FREE = "1004";
 }
